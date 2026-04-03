@@ -336,28 +336,31 @@ async function generatePDF() {
             // Draw image
             pdf.addImage(img, 'PNG', 0, 0, 1920, 1080);
 
-            // On page 3, overlay the guest name using canvas (for Gujarati font support)
+            // On page 3, overlay ONLY the guest name over the "___" area
             if (i === 3) {
                 // Wait for Gujarati font to be fully loaded
                 await document.fonts.ready;
-                // Force font load check
-                await document.fonts.load('bold 30px "Noto Sans Gujarati"');
+                await document.fonts.load('bold 28px "Noto Sans Gujarati"');
+                await document.fonts.load('600 28px "Noto Sans Gujarati"');
+                // Small delay to ensure font is ready
+                await new Promise(r => setTimeout(r, 200));
 
-                const nameText = '\u0AB8\u0ACD\u0AA8\u0AC7\u0AB9\u0AC0 \u0AB8\u0ACD\u0AB5\u0A9C\u0AA8 \u0AB6\u0ACD\u0AB0\u0AC0, ' + name;
+                // Only write the name (not "સ્નેહી સ્વજન શ્રી," - that's already in the image)
                 const canvas = document.createElement('canvas');
-                canvas.width = 1800;
-                canvas.height = 110;
+                canvas.width = 1200;
+                canvas.height = 80;
                 const ctx = canvas.getContext('2d');
-                // Maroon background to cover "___" line
+                // Maroon background to cover only the "___" underscores
                 ctx.fillStyle = '#8B1A1A';
-                ctx.fillRect(0, 0, 1800, 110);
-                // Write Gujarati text with loaded font
-                ctx.font = 'bold 60px "Noto Sans Gujarati", sans-serif';
+                ctx.fillRect(0, 0, 1200, 80);
+                // Write only the guest name in Gujarati
+                ctx.font = '600 48px "Noto Sans Gujarati", sans-serif';
                 ctx.fillStyle = '#FFFFFF';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(nameText, 20, 58);
-                // Add canvas as image to PDF (scaled to fit page)
-                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 86, 135, 900, 55);
+                ctx.fillText(name, 10, 42);
+                // Position: cover the "___" area after "સ્નેહી સ્વજન શ્રી, "
+                // "શ્રી, " ends at roughly x=420 on the 1920px wide page
+                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 420, 136, 600, 40);
             }
 
             // On page 9 (last page), add clickable link on OK button area
