@@ -338,20 +338,25 @@ async function generatePDF() {
 
             // On page 3, overlay the guest name using canvas (for Gujarati font support)
             if (i === 3) {
+                // Wait for Gujarati font to be fully loaded
+                await document.fonts.ready;
+                // Force font load check
+                await document.fonts.load('bold 30px "Noto Sans Gujarati"');
+
                 const nameText = '\u0AB8\u0ACD\u0AA8\u0AC7\u0AB9\u0AC0 \u0AB8\u0ACD\u0AB5\u0A9C\u0AA8 \u0AB6\u0ACD\u0AB0\u0AC0, ' + name;
                 const canvas = document.createElement('canvas');
-                canvas.width = 900;
-                canvas.height = 55;
+                canvas.width = 1800;
+                canvas.height = 110;
                 const ctx = canvas.getContext('2d');
-                // Maroon background to cover "___"
+                // Maroon background to cover "___" line
                 ctx.fillStyle = '#8B1A1A';
-                ctx.fillRect(0, 0, 900, 55);
-                // Write Gujarati text
-                ctx.font = 'bold 30px "Noto Sans Gujarati", sans-serif';
+                ctx.fillRect(0, 0, 1800, 110);
+                // Write Gujarati text with loaded font
+                ctx.font = 'bold 60px "Noto Sans Gujarati", sans-serif';
                 ctx.fillStyle = '#FFFFFF';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(nameText, 10, 28);
-                // Add canvas as image to PDF
+                ctx.fillText(nameText, 20, 58);
+                // Add canvas as image to PDF (scaled to fit page)
                 pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 86, 135, 900, 55);
             }
 
