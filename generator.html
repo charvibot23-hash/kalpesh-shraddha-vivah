@@ -353,9 +353,15 @@ async function generatePDF() {
         loadingText.textContent = 'PDF બની રહ્યું છે...';
         progressFill.style.width = '100%';
 
-        // Generate filename
-        const safeName = name.replace(/[^a-zA-Z0-9\u0A80-\u0AFF ]/g, '').replace(/\s+/g, '-');
-        pdf.save('Kankotri-' + safeName + '.pdf');
+        // Generate filename - use name directly, fallback to default
+        let fileName = 'Kankotri-Gohil-Parivar';
+        try {
+            const cleanName = name.replace(/[\\/:*?"<>|]/g, '').trim();
+            if (cleanName.length > 0) {
+                fileName = 'Kankotri-' + cleanName;
+            }
+        } catch(e) {}
+        pdf.save(fileName + '.pdf');
 
         loading.classList.remove('show');
         success.classList.add('show');
