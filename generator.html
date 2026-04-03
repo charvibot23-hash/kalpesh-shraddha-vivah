@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>કંકોત્રી PDF Generator - ગોહિલ પરિવાર</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Gujarati:wght@400;600;700;900&family=Noto+Sans+Gujarati:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans Gujarati', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 30%, #1a0a2e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 480px;
+            width: 100%;
+            background: linear-gradient(145deg, #fff9f0, #fdf3e3);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #8B1A1A, #a52a2a);
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.03) 10px, rgba(255,255,255,0.03) 20px);
+        }
+        .header h1 {
+            font-family: 'Noto Serif Gujarati', serif;
+            font-size: 24px;
+            color: #ffd700;
+            position: relative;
+        }
+        .header p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
+            margin-top: 5px;
+            position: relative;
+        }
+
+        .body {
+            padding: 30px 25px;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .step-num {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8B1A1A, #a52a2a);
+            color: #ffd700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .step-text {
+            font-size: 14px;
+            color: #5a3e1b;
+            line-height: 1.5;
+            padding-top: 5px;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #8B1A1A;
+            margin-bottom: 8px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0d5c0;
+            border-radius: 12px;
+            font-size: 18px;
+            font-family: 'Noto Sans Gujarati', sans-serif;
+            color: #3a2a1a;
+            background: #fff;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .input-group input:focus {
+            border-color: #c9a84c;
+        }
+        .input-group input::placeholder {
+            color: #c0b0a0;
+            font-size: 15px;
+        }
+
+        .preview-box {
+            background: #8B1A1A;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .preview-label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 5px;
+        }
+        .preview-text {
+            font-size: 16px;
+            color: #ffd700;
+            font-weight: 600;
+            font-family: 'Noto Sans Gujarati', sans-serif;
+        }
+
+        .download-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #2d6b16, #4a8025);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 700;
+            font-family: 'Noto Sans Gujarati', sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 20px rgba(45,107,22,0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(45,107,22,0.45);
+        }
+        .download-btn:active {
+            transform: translateY(0);
+        }
+        .download-btn:disabled {
+            background: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        .loading.show { display: block; }
+        .loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e0d5c0;
+            border-top: 4px solid #8B1A1A;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text {
+            font-size: 14px;
+            color: #8B1A1A;
+            font-weight: 600;
+        }
+        .progress-bar {
+            height: 6px;
+            background: #e0d5c0;
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8B1A1A, #c9a84c);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .success {
+            display: none;
+            text-align: center;
+            padding: 15px;
+            background: rgba(45,107,22,0.1);
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+        .success.show { display: block; }
+        .success-icon { font-size: 30px; }
+        .success-text { font-size: 14px; color: #2d6b16; font-weight: 600; margin-top: 5px; }
+
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 10px;
+            color: #bbb;
+            border-top: 1px solid #e8dcc0;
+        }
+
+        .gold-line {
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>કંકોત્રી PDF Generator</h1>
+        <p>॥ ગોહિલ પરિવાર - ઉમરગઢ ॥</p>
+    </div>
+
+    <div class="body">
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-text">નીચે જેમને આમંત્રણ મોકલવું છે તેમનું નામ લખો</div>
+        </div>
+
+        <div class="input-group">
+            <label>મહેમાન નું નામ</label>
+            <input type="text" id="guestName" placeholder="દા.ત. શ્રી રમેશભાઈ પટેલ" oninput="updatePreview()">
+        </div>
+
+        <div class="preview-box">
+            <div class="preview-label">Page 3 માં આમ દેખાશે:</div>
+            <div class="preview-text" id="previewText">સ્નેહી સ્વજન શ્રી, _______________</div>
+        </div>
+
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-text">PDF Download કરો ane WhatsApp માં share કરો</div>
+        </div>
+
+        <button class="download-btn" id="downloadBtn" onclick="generatePDF()">
+            📥 PDF Download કરો
+        </button>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div class="loading-text" id="loadingText">Images load થઈ રહી છે...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="success" id="success">
+            <div class="success-icon">✅</div>
+            <div class="success-text">PDF Download થઈ ગયું!</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Created by Jayesh Bhimjibhai Gohil
+    </div>
+</div>
+
+<script>
+const BASE_URL = './pages/';
+const TOTAL_PAGES = 9;
+
+function updatePreview() {
+    const name = document.getElementById('guestName').value.trim();
+    const preview = document.getElementById('previewText');
+    if (name) {
+        preview.textContent = 'સ્નેહી સ્વજન શ્રી, ' + name;
+    } else {
+        preview.textContent = 'સ્નેહી સ્વજન શ્રી, _______________';
+    }
+}
+
+function loadImage(src) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error('Failed to load: ' + src));
+        img.src = src;
+    });
+}
+
+async function generatePDF() {
+    const name = document.getElementById('guestName').value.trim();
+    if (!name) {
+        alert('કૃપા કરીને મહેમાન નું નામ લખો!');
+        document.getElementById('guestName').focus();
+        return;
+    }
+
+    const btn = document.getElementById('downloadBtn');
+    const loading = document.getElementById('loading');
+    const success = document.getElementById('success');
+    const progressFill = document.getElementById('progressFill');
+    const loadingText = document.getElementById('loadingText');
+
+    btn.disabled = true;
+    loading.classList.add('show');
+    success.classList.remove('show');
+
+    try {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [1920, 1080] });
+
+        for (let i = 1; i <= TOTAL_PAGES; i++) {
+            loadingText.textContent = 'Page ' + i + ' load થઈ રહી છે...';
+            progressFill.style.width = ((i / TOTAL_PAGES) * 80) + '%';
+
+            const img = await loadImage(BASE_URL + 'page' + i + '.png');
+
+            if (i > 1) pdf.addPage([1920, 1080], 'landscape');
+
+            // Draw image
+            pdf.addImage(img, 'PNG', 0, 0, 1920, 1080);
+
+            // On page 3, overlay the guest name
+            if (i === 3) {
+                // White background behind text area to cover "___"
+                pdf.setFillColor(139, 26, 26); // maroon background matching page
+                pdf.rect(280, 169, 600, 50, 'F');
+
+                // Write the name
+                pdf.setFont('helvetica', 'bold');
+                pdf.setFontSize(28);
+                pdf.setTextColor(255, 255, 255);
+                pdf.text('\u0AB8\u0ACD\u0AA8\u0AC7\u0AB9\u0AC0 \u0AB8\u0ACD\u0AB5\u0A9C\u0AA8 \u0AB6\u0ACD\u0AB0\u0AC0, ' + name, 86, 199);
+            }
+        }
+
+        loadingText.textContent = 'PDF બની રહ્યું છે...';
+        progressFill.style.width = '100%';
+
+        // Generate filename
+        const safeName = name.replace(/[^a-zA-Z0-9\u0A80-\u0AFF ]/g, '').replace(/\s+/g, '-');
+        pdf.save('Kankotri-' + safeName + '.pdf');
+
+        loading.classList.remove('show');
+        success.classList.add('show');
+        setTimeout(() => { success.classList.remove('show'); }, 3000);
+
+    } catch (err) {
+        alert('Error: ' + err.message + '\n\nKrupaya fari try karo.');
+        console.error(err);
+    }
+
+    btn.disabled = false;
+    loading.classList.remove('show');
+    progressFill.style.width = '0%';
+}
+</script>
+
+</body>
+</html>
