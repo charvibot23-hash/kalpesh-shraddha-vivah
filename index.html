@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>શુભવિવાહ - કલ્પેશ & શ્રદ્ધા | આભાર</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Gujarati:wght@400;600;700;900&family=Noto+Sans+Gujarati:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans Gujarati', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 30%, #1a0a2e 100%);
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+            opacity: 0.6;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
+        .card {
+            position: relative;
+            z-index: 1;
+            max-width: 420px;
+            width: 100%;
+            background: linear-gradient(145deg, #fff9f0, #fdf3e3, #fff8ef);
+            border-radius: 24px;
+            padding: 0;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4), 0 0 40px rgba(201,168,76,0.15);
+            overflow: hidden;
+            animation: cardEntry 0.6s ease-out;
+        }
+        @keyframes cardEntry {
+            0% { transform: scale(0.8) translateY(30px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        /* Top decorative header */
+        .card-header {
+            background: linear-gradient(135deg, #8B1A1A, #a52a2a, #8B1A1A);
+            padding: 25px 20px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.03) 10px,
+                rgba(255,255,255,0.03) 20px
+            );
+        }
+        .card-header .decorative-top {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        .card-header .title {
+            font-family: 'Noto Serif Gujarati', serif;
+            font-size: 28px;
+            font-weight: 900;
+            color: #ffd700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .card-header .subtitle {
+            font-size: 14px;
+            color: rgba(255,255,255,0.85);
+            margin-top: 5px;
+            position: relative;
+        }
+
+        /* Checkmark animation */
+        .check-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2d6b16, #4a8025);
+            margin: -40px auto 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(45,107,22,0.4);
+            position: relative;
+            z-index: 2;
+            animation: popIn 0.5s ease 0.3s both;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            70% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+        .check-circle svg {
+            width: 40px;
+            height: 40px;
+            fill: none;
+            stroke: white;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .check-circle svg path {
+            stroke-dasharray: 50;
+            stroke-dashoffset: 50;
+            animation: drawCheck 0.5s ease 0.6s forwards;
+        }
+        @keyframes drawCheck {
+            to { stroke-dashoffset: 0; }
+        }
+
+        /* Body content */
+        .card-body {
+            padding: 25px 25px 10px;
+            text-align: center;
+        }
+        .thanks-text {
+            font-family: 'Noto Serif Gujarati', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #8B1A1A;
+            margin: 15px 0 5px;
+            animation: fadeInUp 0.5s ease 0.5s both;
+        }
+        .response-text {
+            font-size: 15px;
+            color: #5a3e1b;
+            line-height: 1.8;
+            margin: 10px 0;
+            animation: fadeInUp 0.5s ease 0.6s both;
+        }
+        @keyframes fadeInUp {
+            0% { transform: translateY(15px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Gold divider */
+        .gold-divider {
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+            margin: 18px 0;
+            animation: fadeInUp 0.5s ease 0.7s both;
+        }
+
+        /* Details section */
+        .details {
+            animation: fadeInUp 0.5s ease 0.8s both;
+        }
+        .detail-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            text-align: left;
+        }
+        .detail-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .detail-icon.date { background: rgba(139,26,26,0.1); }
+        .detail-icon.location { background: rgba(45,107,22,0.1); }
+        .detail-icon.marriage { background: rgba(201,168,76,0.15); }
+
+        .detail-info .label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .detail-info .value {
+            font-size: 14px;
+            color: #3a2a1a;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        /* Map button */
+        .map-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #2d6b16, #4a8025);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Noto Sans Gujarati', sans-serif;
+            cursor: pointer;
+            margin: 18px 0 5px;
+            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(45,107,22,0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: fadeInUp 0.5s ease 0.9s both;
+        }
+        .map-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(45,107,22,0.45);
+        }
+        .map-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Footer */
+        .card-footer {
+            padding: 15px 25px 20px;
+            text-align: center;
+            animation: fadeInUp 0.5s ease 1s both;
+        }
+        .parivar-name {
+            font-family: 'Noto Serif Gujarati', serif;
+            font-size: 15px;
+            font-weight: 700;
+            color: #c9a84c;
+        }
+        .created-by {
+            font-size: 10px;
+            color: #bbb;
+            margin-top: 10px;
+        }
+
+        /* Confetti animation on load */
+        .confetti-container {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 10;
+            overflow: hidden;
+        }
+        .confetti {
+            position: absolute;
+            top: -10px;
+            width: 10px;
+            height: 10px;
+            animation: confettiFall linear forwards;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Floating particles background -->
+<div class="particles" id="particles"></div>
+
+<!-- Confetti on load -->
+<div class="confetti-container" id="confetti"></div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="decorative-top">🎊 🙏 🎊</div>
+        <div class="title">આપનો જવાબ નોંધાયો!</div>
+        <div class="subtitle">॥ ગોહિલ પરિવાર ॥</div>
+    </div>
+
+    <div class="check-circle">
+        <svg viewBox="0 0 40 40">
+            <path d="M10 20 L17 27 L30 13" />
+        </svg>
+    </div>
+
+    <div class="card-body">
+        <div class="thanks-text">ખૂબ ખૂબ આભાર! 🎉</div>
+        <div class="response-text">
+            આપના શુભ આશિષ અને<br>
+            પ્રેમભર્યા આગમનની<br>
+            અમે પ્રતીક્ષા કરીએ છીએ.
+        </div>
+
+        <div class="gold-divider"></div>
+
+        <div class="details">
+            <div class="detail-row">
+                <div class="detail-icon date">📅</div>
+                <div class="detail-info">
+                    <div class="label">તારીખ</div>
+                    <div class="value">૨૬/૦૪/૨૦૨૬, રવિવાર<br>
+                    <span style="font-size:12px; color:#888;">સંવત ૨૦૮૨, વૈશાખ સુદ ૧૦</span></div>
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-icon location">🏠</div>
+                <div class="detail-info">
+                    <div class="label">શુભ સ્થળ (ગામ)</div>
+                    <div class="value">મું. ઉમરગઢ, તા. ધંધુકા,<br>જી. અમદાવાદ</div>
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-icon marriage">💒</div>
+                <div class="detail-info">
+                    <div class="label">શુભ લગ્ન સ્થળ</div>
+                    <div class="value">ધરમનગર, કિકાણી કોલેજ પાસે,<br>ધંધુકા</div>
+                </div>
+            </div>
+        </div>
+
+        <a href="https://maps.app.goo.gl/rzn7Rjq5ULsXUgdNA?g_st=ac" target="_blank" class="map-btn">
+            📍 Google Maps માં Location જુઓ
+        </a>
+    </div>
+
+    <div class="card-footer">
+        <div class="parivar-name">॥ ગોહિલ પરિવાર - ઉમરગઢ ॥</div>
+        <div class="created-by">Created by Jayesh Bhimjibhai Gohil</div>
+    </div>
+</div>
+
+<script>
+    // Create floating particles
+    const particlesEl = document.getElementById('particles');
+    const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#ff9ff3', '#f8b500'];
+    for (let i = 0; i < 20; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 6 + 3;
+        p.style.width = size + 'px';
+        p.style.height = size + 'px';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.animationDuration = (Math.random() * 8 + 6) + 's';
+        p.style.animationDelay = (Math.random() * 5) + 's';
+        particlesEl.appendChild(p);
+    }
+
+    // Create confetti burst
+    const confettiEl = document.getElementById('confetti');
+    const confettiColors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#ff9ff3', '#8B1A1A', '#4a8025', '#f8b500'];
+    for (let i = 0; i < 50; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        const size = Math.random() * 8 + 5;
+        c.style.width = size + 'px';
+        c.style.height = size * (Math.random() * 0.5 + 0.5) + 'px';
+        c.style.left = Math.random() * 100 + '%';
+        c.style.background = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+        c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        c.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        c.style.animationDelay = (Math.random() * 1) + 's';
+        confettiEl.appendChild(c);
+    }
+    // Remove confetti after animation
+    setTimeout(() => { confettiEl.remove(); }, 5000);
+</script>
+
+</body>
+</html>
