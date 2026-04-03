@@ -354,7 +354,7 @@ async function generatePDF() {
                 ctx.fillStyle = '#8B1A1A';
                 ctx.fillRect(0, 0, 1400, 70);
                 // Font size 44px on 2x canvas = ~22px display = matches "સ્નેહી સ્વજન શ્રી," size
-                ctx.font = '600 44px "Noto Sans Gujarati", sans-serif';
+                ctx.font = 'bold 44px "Noto Sans Gujarati", sans-serif';
                 ctx.fillStyle = '#FFD700';
                 ctx.textBaseline = 'middle';
                 ctx.fillText(name, 6, 30);
@@ -367,7 +367,7 @@ async function generatePDF() {
                 ctx.lineTo(6 + nameWidth, 56);
                 ctx.stroke();
                 // X=310 closer to "શ્રી,", Y=146, display at 700x35 (2x→1x scaling)
-                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 310, 146, 700, 35);
+                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 280, 146, 700, 35);
             }
 
             // On page 9 (last page), add clickable link on OK button area
