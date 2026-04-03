@@ -366,9 +366,8 @@ async function generatePDF() {
                 ctx.moveTo(10, 65);
                 ctx.lineTo(10 + nameWidth, 65);
                 ctx.stroke();
-                // Position: cover the "___" area after "સ્નેહી સ્વજન શ્રી, "
-                // Y=137 matches the first text line position, X=400 after "શ્રી, "
-                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 400, 137, 600, 38);
+                // Position: same line as "સ્નેહી સ્વજન શ્રી, " - right after comma
+                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 370, 80, 600, 38);
             }
 
             // On page 9 (last page), add clickable link on OK button area
