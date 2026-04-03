@@ -348,6 +348,16 @@ async function generatePDF() {
                 pdf.setTextColor(255, 255, 255);
                 pdf.text('\u0AB8\u0ACD\u0AA8\u0AC7\u0AB9\u0AC0 \u0AB8\u0ACD\u0AB5\u0A9C\u0AA8 \u0AB6\u0ACD\u0AB0\u0AC0, ' + name, 86, 199);
             }
+
+            // On page 9 (last page), add clickable link on OK button area
+            if (i === 9) {
+                const okLinkUrl = 'https://charvibot23-hash.github.io/kalpesh-shraddha-vivah/';
+                // OK button image is roughly at right side of the page
+                // Add invisible clickable link over the OK button area
+                pdf.link(1200, 350, 350, 350, { url: okLinkUrl });
+                // Also add link on the "લાઈક (OK) કરીને આપશોજી" text area
+                pdf.link(243, 875, 620, 50, { url: okLinkUrl });
+            }
         }
 
         loadingText.textContent = 'PDF બની રહ્યું છે...';
