@@ -366,8 +366,9 @@ async function generatePDF() {
                 ctx.moveTo(10, 65);
                 ctx.lineTo(10 + nameWidth, 65);
                 ctx.stroke();
-                // Position: same line as "સ્નેહી સ્વજન શ્રી, " - right after comma
-                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 370, 80, 600, 38);
+                // EXACT position from pixel analysis: "સ્નેહી સ્વજન શ્રી," is at Y=148-170
+                // Name goes right after "શ્રી, " at X=340, Y=146 (same baseline)
+                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 340, 146, 650, 30);
             }
 
             // On page 9 (last page), add clickable link on OK button area
