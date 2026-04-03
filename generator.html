@@ -357,7 +357,15 @@ async function generatePDF() {
                 ctx.font = '600 48px "Noto Sans Gujarati", sans-serif';
                 ctx.fillStyle = '#FFD700';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(name, 10, 42);
+                ctx.fillText(name, 10, 38);
+                // Draw underline below the name
+                const nameWidth = ctx.measureText(name).width;
+                ctx.strokeStyle = '#FFD700';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(10, 65);
+                ctx.lineTo(10 + nameWidth, 65);
+                ctx.stroke();
                 // Position: cover the "___" area after "સ્નેહી સ્વજન શ્રી, "
                 // Y=137 matches the first text line position, X=400 after "શ્રી, "
                 pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 400, 137, 600, 38);
