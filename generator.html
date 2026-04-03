@@ -336,17 +336,23 @@ async function generatePDF() {
             // Draw image
             pdf.addImage(img, 'PNG', 0, 0, 1920, 1080);
 
-            // On page 3, overlay the guest name
+            // On page 3, overlay the guest name using canvas (for Gujarati font support)
             if (i === 3) {
-                // White background behind text area to cover "___"
-                pdf.setFillColor(139, 26, 26); // maroon background matching page
-                pdf.rect(280, 169, 600, 50, 'F');
-
-                // Write the name
-                pdf.setFont('helvetica', 'bold');
-                pdf.setFontSize(28);
-                pdf.setTextColor(255, 255, 255);
-                pdf.text('\u0AB8\u0ACD\u0AA8\u0AC7\u0AB9\u0AC0 \u0AB8\u0ACD\u0AB5\u0A9C\u0AA8 \u0AB6\u0ACD\u0AB0\u0AC0, ' + name, 86, 199);
+                const nameText = '\u0AB8\u0ACD\u0AA8\u0AC7\u0AB9\u0AC0 \u0AB8\u0ACD\u0AB5\u0A9C\u0AA8 \u0AB6\u0ACD\u0AB0\u0AC0, ' + name;
+                const canvas = document.createElement('canvas');
+                canvas.width = 900;
+                canvas.height = 55;
+                const ctx = canvas.getContext('2d');
+                // Maroon background to cover "___"
+                ctx.fillStyle = '#8B1A1A';
+                ctx.fillRect(0, 0, 900, 55);
+                // Write Gujarati text
+                ctx.font = 'bold 30px "Noto Sans Gujarati", sans-serif';
+                ctx.fillStyle = '#FFFFFF';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(nameText, 10, 28);
+                // Add canvas as image to PDF
+                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 86, 135, 900, 55);
             }
 
             // On page 9 (last page), add clickable link on OK button area
