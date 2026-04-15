@@ -323,7 +323,10 @@ async function generatePDF() {
 
     try {
         const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [1920, 1080] });
+        // Portrait format matching new 1190x1677 images
+        const PAGE_W = 1190;
+        const PAGE_H = 1677;
+        const pdf = new jsPDF({ orientation: 'portrait', unit: 'px', format: [PAGE_W, PAGE_H] });
 
         for (let i = 1; i <= TOTAL_PAGES; i++) {
             loadingText.textContent = 'Page ' + i + ' load થઈ રહી છે...';
@@ -331,53 +334,42 @@ async function generatePDF() {
 
             const img = await loadImage(BASE_URL + 'page' + i + '.png');
 
-            if (i > 1) pdf.addPage([1920, 1080], 'landscape');
+            if (i > 1) pdf.addPage([PAGE_W, PAGE_H], 'portrait');
 
-            // Draw image
-            pdf.addImage(img, 'PNG', 0, 0, 1920, 1080);
+            // Draw image full page
+            pdf.addImage(img, 'PNG', 0, 0, PAGE_W, PAGE_H);
 
-            // On page 3, overlay ONLY the guest name over the "___" area
+            // On page 3, overlay guest name after "સ્નેહી સ્વજન શ્રી,"
             if (i === 3) {
-                // Wait for Gujarati font to be fully loaded
                 await document.fonts.ready;
-                await document.fonts.load('bold 28px "Noto Sans Gujarati"');
-                await document.fonts.load('600 28px "Noto Sans Gujarati"');
-                // Small delay to ensure font is ready
+                await document.fonts.load('bold 36px "Noto Sans Gujarati"');
                 await new Promise(r => setTimeout(r, 200));
 
-                // 2x resolution canvas for crisp text matching original font size
+                // 2x resolution canvas for crisp text
                 const canvas = document.createElement('canvas');
-                canvas.width = 1400;
-                canvas.height = 70;
+                canvas.width = 1600;
+                canvas.height = 80;
                 const ctx = canvas.getContext('2d');
-                // Maroon background to cover the "___" underscores
+                // Maroon background matching the kankotri
                 ctx.fillStyle = '#8B1A1A';
-                ctx.fillRect(0, 0, 1400, 70);
-                // Font size 44px on 2x canvas = ~22px display = matches "સ્નેહી સ્વજન શ્રી," size
-                ctx.font = 'bold 44px "Noto Sans Gujarati", sans-serif';
-                ctx.fillStyle = '#FFD700';
+                ctx.fillRect(0, 0, 1600, 80);
+                // White text matching "સ્નેહી સ્વજન શ્રી," style
+                ctx.font = 'bold 48px "Noto Sans Gujarati", sans-serif';
+                ctx.fillStyle = '#FFFFFF';
                 ctx.textBaseline = 'middle';
-                ctx.fillText(name, 6, 30);
-                // Draw underline below the name
-                const nameWidth = ctx.measureText(name).width;
-                ctx.strokeStyle = '#FFD700';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(6, 56);
-                ctx.lineTo(6 + nameWidth, 56);
-                ctx.stroke();
-                // X=310 closer to "શ્રી,", Y=146, display at 700x35 (2x→1x scaling)
-                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 280, 146, 700, 35);
+                ctx.fillText(name, 8, 38);
+                // Overlay right after "સ્નેહી સ્વજન શ્રી," on page 3
+                // Position: x=285 (after comma), y=163, display at 800x40
+                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 285, 163, 800, 40);
             }
 
             // On page 9 (last page), add clickable link on OK button area
             if (i === 9) {
                 const okLinkUrl = 'https://charvibot23-hash.github.io/kalpesh-shraddha-vivah/';
-                // OK button image is roughly at right side of the page
-                // Add invisible clickable link over the OK button area
-                pdf.link(1200, 350, 350, 350, { url: okLinkUrl });
-                // Also add link on the "લાઈક (OK) કરીને આપશોજી" text area
-                pdf.link(243, 875, 620, 50, { url: okLinkUrl });
+                // "લાઈક (OK) કરીને આપશોજી" text at ~(150, 980)
+                pdf.link(140, 970, 460, 50, { url: okLinkUrl });
+                // Also cover the image/button area on right side
+                pdf.link(590, 470, 460, 700, { url: okLinkUrl });
             }
         }
 
