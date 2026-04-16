@@ -360,7 +360,7 @@ async function generatePDF() {
                 ctx.fillText(name, 8, 38);
                 // Overlay right after "સ્નેહી સ્વજન શ્રી," on page 3
                 // Position: x=285 (after comma), y=163, display at 800x40
-                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 285, 178, 800, 40);
+                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 285, 193, 800, 40);
             }
 
             // On page 9 (last page), add clickable link on OK button area
